@@ -1,3 +1,3 @@
 User Function Teste()
-    conout(cteste := "")
+    cteste := ""
 Return
