@@ -1,0 +1,7 @@
+# Uma regra por linha: textos PROIBIDOS no código
+# Linhas começando com # são comentários
+
+ConOut(
+MsgInfo(
+senha=
+TODO
