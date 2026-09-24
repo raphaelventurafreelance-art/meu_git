@@ -1,0 +1,29 @@
+name: Code Review
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Verificar regras
+        run: |
+          REGRAS="regras-review.txt"
+          ERRO=0
+          while IFS= read -r regra || [ -n "$regra" ]; do
+            regra=$(printf '%s' "$regra" | tr -d '\r')
+            case "$regra" in ''|'#'*) continue ;; esac
+            achados=$(git grep -n -F -i -e "$regra" -- . ":(exclude)$REGRAS" ":(exclude).github" || true)
+            if [ -n "$achados" ]; then
+              echo "::error::Proibido: $regra"
+              echo "$achados"
+              ERRO=1
+            fi
+          done < "$REGRAS"
+          if [ $ERRO -eq 1 ]; then exit 1; fi
+          echo "✅ Code-review OK!"
